@@ -4,13 +4,8 @@
 package com.threecube.messageAnalyzer.spout;
 
 import java.util.Map;
-import java.util.Random;
 
-import com.threecube.messageAnalyzer.model.ChatMessageModel;
-
-import org.apache.commons.lang.StringUtils;
 import com.threecube.messageAnalyzer.kafka.KafkaSimpleReader;
-import com.threecube.messageAnalyzer.util.ChatMessageParseUtils;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;

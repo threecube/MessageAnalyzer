@@ -1,21 +1,21 @@
 /**
  * 
  */
-package com.threecube.messageAnalyzer.util;
+package com.threecube.messageAnalyzer.parser;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.threecube.messageAnalyzer.model.ChatMessageModel;
 
 /**
- * chat消息解析器，负责将从kafka接收到的消息解析成对象
+ * chat message parser
  * 
  * @author wenbin_dwb
  *
  */
-public class ChatMessageParseUtils {
+public class ChatMessageParseUtils implements ParserInterface{
 	
-	public static ChatMessageModel parse (String message) {
+	public ChatMessageModel parse (String message) {
 		if(StringUtils.isEmpty(message)){
 			return null;
 		}
