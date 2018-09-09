@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="STD_INFO" class="org.apache.log4j.DailyMaxRollingFileAppender">
+		<param name="file" value="/var/log/java/message-firewall/info.log" />
+		<param name="encoding" value="UTF-8" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="maxBackupIndex" value="30" />
+		<param name="threshold" value="INFO" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] [%c] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="STD_ERROR" class="org.apache.log4j.DailyMaxRollingFileAppender">
+		<param name="file" value="/var/log/java/message-firewall/error.log" />
+		<param name="encoding" value="UTF-8" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="maxBackupIndex" value="30" />
+		<param name="threshold" value="ERROR" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] [%c] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="KAFKA_INFO" class="org.apache.log4j.DailyMaxRollingFileAppender">
+		<param name="file" value="/var/log/java/message-firewall/kafka_info.log" />
+		<param name="encoding" value="UTF-8" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="maxBackupIndex" value="30" />
+		<param name="threshold" value="INFO" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] [%c] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="KAFKA_ERROR" class="org.apache.log4j.DailyMaxRollingFileAppender">
+		<param name="file" value="/var/log/java/message-firewall/kafka_error.log" />
+		<param name="encoding" value="UTF-8" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="maxBackupIndex" value="30" />
+		<param name="threshold" value="ERROR" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] [%c] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="STAT_INFO" class="org.apache.log4j.DailyMaxRollingFileAppender">
+		<param name="file" value="/var/log/java/message-firewall/stat_info.log" />
+		<param name="encoding" value="UTF-8" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="maxBackupIndex" value="30" />
+		<param name="threshold" value="INFO" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] [%c] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="STAT_ERROR" class="org.apache.log4j.DailyMaxRollingFileAppender">
+		<param name="file" value="/var/log/java/message-firewall/stat_error.log" />
+		<param name="encoding" value="UTF-8" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="maxBackupIndex" value="30" />
+		<param name="threshold" value="ERROR" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] [%c] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="DETECT_INFO" class="org.apache.log4j.DailyMaxRollingFileAppender">
+		<param name="file" value="/var/log/java/message-firewall/detect_info.log" />
+		<param name="encoding" value="UTF-8" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="maxBackupIndex" value="30" />
+		<param name="threshold" value="INFO" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] [%c] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="DETECT_ERROR" class="org.apache.log4j.DailyMaxRollingFileAppender">
+		<param name="file" value="/var/log/java/message-firewall/detect_error.log" />
+		<param name="encoding" value="UTF-8" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="maxBackupIndex" value="30" />
+		<param name="threshold" value="ERROR" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%t] [%c] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="ASYN_STD_INFO" class="org.apache.log4j.AsyncAppender">
+    	<param name="BufferSize" value="5000"/>
+    	<appender-ref ref="STD_INFO"/>
+	</appender>
+	
+	<appender name="ASYN_STD_ERROR" class="org.apache.log4j.AsyncAppender">
+    	<param name="BufferSize" value="5000"/>
+    	<appender-ref ref="STD_ERROR"/>
+	</appender>
+	
+	<appender name="ASYN_KAFKA_INFO" class="org.apache.log4j.AsyncAppender">
+    	<param name="BufferSize" value="5000"/>
+    	<appender-ref ref="KAFKA_INFO"/>
+	</appender>
+	
+	<appender name="ASYN_KAFKA_ERROR" class="org.apache.log4j.AsyncAppender">
+    	<param name="BufferSize" value="5000"/>
+    	<appender-ref ref="KAFKA_ERROR"/>
+	</appender>
+	
+	<appender name="ASYN_STAT_INFO" class="org.apache.log4j.AsyncAppender">
+    	<param name="BufferSize" value="5000"/>
+    	<appender-ref ref="STAT_INFO"/>
+	</appender>
+	
+	<appender name="ASYN_STAT_ERROR" class="org.apache.log4j.AsyncAppender">
+    	<param name="BufferSize" value="5000"/>
+    	<appender-ref ref="STAT_ERROR"/>
+	</appender>
+	
+	<appender name="ASYN_DETECT_INFO" class="org.apache.log4j.AsyncAppender">
+    	<param name="BufferSize" value="5000"/>
+    	<appender-ref ref="DETECT_INFO"/>
+	</appender>
+	
+	<appender name="ASYN_DETECT_ERROR" class="org.apache.log4j.AsyncAppender">
+    	<param name="BufferSize" value="5000"/>
+    	<appender-ref ref="DETECT_ERROR"/>
+	</appender>
+	
+	<logger name="com.threecube.prod.analzyer.model.ChatMessageScheme" additivity="false">
+		<level value="INFO" />
+        <appender-ref ref="ASYN_KAFKA_INFO" />
+        <appender-ref ref="ASYN_KAFKA_ERROR" />
+    </logger>
+    
+    <logger name="com.threecube.prod.analzyer.bolt" additivity="false">
+    	<level value="INFO" />
+        <appender-ref ref="ASYN_STAT_INFO" />
+        <appender-ref ref="ASYN_STAT_ERROR" />
+    </logger>
+    
+    <logger name="com.threecube.prod.analzyer.service" additivity="false">
+    	<level value="INFO" />
+        <appender-ref ref="ASYN_DETECT_INFO" />
+        <appender-ref ref="ASYN_DETECT_ERROR" />
+    </logger>
+    
+    <root>
+        <level value="INFO" />
+        <appender-ref ref="console" />
+        <appender-ref ref="ASYN_STD_INFO" />
+        <appender-ref ref="ASYN_STD_ERROR" />
+    </root>
+	
+</log4j:configuration>

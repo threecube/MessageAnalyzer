@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	 <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl">
+        	<value>#{configManager.getMysqlConfig('trade_public_mysql','im_write_immonitor','im_monitor').url + '&amp;allowMultiQueries=true'}</value>
+        </property>
+        <property name="user" value="#{configManager.getMysqlConfig('trade_public_mysql','im_write_immonitor','im_monitor').user}"/>
+        <property name="password" value="#{configManager.getMysqlConfig('trade_public_mysql','im_write_immonitor','im_monitor').pwd}"/>
+        
+        <property name="acquireIncrement" value="${firewall.c3p0.acquireIncrement}"/>
+        <property name="initialPoolSize" value="${firewall.c3p0.initialPoolSize}"/>
+        <property name="minPoolSize" value="${firewall.c3p0.minPoolSize}"/>
+        <property name="maxPoolSize" value="${firewall.c3p0.maxPoolSize}"/>
+        <property name="maxIdleTime" value="${firewall.c3p0.maxIdleTime}"/>
+        <property name="checkoutTimeout" value="${firewall.c3p0.checkoutTimeout}"/>
+        <property name="idleConnectionTestPeriod" value="${firewall.c3p0.idleConnectionTestPeriod}"/>
+        <property name="preferredTestQuery" value="${firewall.c3p0.preferredTestQuery}"/>
+    </bean>
+    		
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:/mapper/*Mapper.xml" />	
+	</bean>
+	
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>      
+        <property name="basePackage" value="com.threecube.prod.analzyer.datasource.Dao" />
+    </bean>
+    
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource"/>  
+    </bean> 
+	
+	<bean id="connectionProvider" class="org.apache.storm.jdbc.common.HikariCPConnectionProvider">
+		<constructor-arg>
+			<map>
+				<entry key="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
+				<entry key="dataSource.url" value="#{configManager.getMysqlConfig('trade_public_mysql','im_write_immonitor','im_monitor').url}"/>
+				<entry key="dataSource.user" value="#{configManager.getMysqlConfig('trade_public_mysql','im_write_immonitor','im_monitor').user}" />
+				<entry key="dataSource.password" value="#{configManager.getMysqlConfig('trade_public_mysql','im_write_immonitor','im_monitor').pwd}" />
+			</map>
+		</constructor-arg>
+	</bean>
+	
+</beans>

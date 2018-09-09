@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <!-- kafka spout -->
+    <bean name="brokerHosts" class="org.apache.storm.kafka.ZkHosts">
+    	<constructor-arg name="brokerZkStr" value="#{configManager.getKafkaConfig('trade_public_kafka','1.1').zookeeper}"/>
+    </bean>
+    <bean id="kafkaSpoutConfig" class="com.threecube.prod.analzyer.spout.KafkaSpoutConfig">
+   		<constructor-arg name="hosts" ref="brokerHosts"/>
+   		<constructor-arg name="topic" value="${kafka.im.msg.topic}"/>
+   		<constructor-arg name="zkRoot" value="/brokers"/>
+   		<constructor-arg name="id" value=""/>
+    </bean>
+    <bean name="kafkaSpout" class="org.apache.storm.kafka.KafkaSpout">
+    	<constructor-arg ref="kafkaSpoutConfig"/>
+    </bean>
+</beans>

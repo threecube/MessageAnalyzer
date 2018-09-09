@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <!--  redis common bolt -->
+    <bean id="redisCommonBolt" class="com.threecube.prod.analzyer.bolt.RedisCommonBolt">
+    	<property name="masterNames" value="#{configManager.getConfigValue('cd-im-usercenter','redis.masters')}" />
+		<property name="sentinels" value="#{configManager.getConfigValue('trade_public_redis','public_sentinels_01')}" />
+		<property name="redisConfigs">
+			<map>
+				<entry key="minIdle" value="${redis.minIdle}" />
+				<entry key="maxIdle" value="${redis.maxIdle}" />
+				<entry key="maxTotal" value="${redis.maxTotal}" />
+				<entry key="maxWaitMillis" value="${redis.maxWaitMillis}" />
+				<entry key="testWhileIdle" value="${redis.testWhileIdle}" />
+				<entry key="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}" />
+				<entry key="softMinEvictableIdleTimeMillis" value="${redis.softMinEvictableIdleTimeMillis}" />
+				<entry key="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}" />
+			</map>
+		</property>
+		<property name="timeout" value="${redis.opTimeOut}" />
+    </bean>
+    
+    <!-- jdbc common bolt -->
+    <bean id="jdbcCommonBolt" class="com.threecube.prod.analzyer.bolt.JdbcCommonBolt">
+    	<constructor-arg>
+    		<ref bean="connectionProvider"/>
+    	</constructor-arg>
+    </bean>
+    
+    <!-- flow detector common bolt -->
+    <bean id="anomalFlowDetectBolt" class="com.threecube.prod.analzyer.bolt.AnomalFlowDetectBolt">
+    	<constructor-arg>
+    		<ref bean="messageAnormalDetector"/>
+    	</constructor-arg>
+    </bean>
+    
+    <!-- detector common bolt -->
+    <bean id="anomalContentDetectBolt" class="com.threecube.prod.analzyer.bolt.AnomalContentDetectBolt">
+    	<constructor-arg>
+    		<ref bean="messageAnormalDetector"/>
+    	</constructor-arg>
+    </bean>
+    
+    <!-- data statistic bolt: sender to accepter -->
+    <bean id="sender2AccepterMsgStatBolt" class="com.threecube.prod.analzyer.bolt.Sender2AcepterMsgStatBolt">
+    	<property name="eplContext" value="${epl.context.sender.accepter.stat}"></property>
+    	<property name="epl" value="${epl.sender.accepter.stat}"></property>
+    	<property name="groupFields">
+    		<array>
+    			<value>${tuple.group.field.from}</value>
+    			<value>${tuple.group.field.to}</value>
+    		</array>
+    	</property>
+    </bean>
+    
+    <!-- data statistic bolt: sender to all accepters -->
+    <bean id="senderMsgStatBolt" class="com.threecube.prod.analzyer.bolt.SenderMsgStatBolt">
+    	<property name="eplContext" value="${epl.context.sender.stat}"></property>
+    	<property name="epl" value="${epl.sender.stat}"></property>
+    	<property name="groupFields">
+    		<array>
+    			<value>${tuple.group.field.from}</value>
+    		</array>
+    	</property>
+    </bean>
+    
+    <!-- data statistic bolt: sender to all accepters -->
+    <bean id="grossMsgStatBolt" class="com.threecube.prod.analzyer.bolt.GrossMsgStatBolt">
+    	<property name="epl" value="${epl.gross.stat}"></property>
+    </bean>
+    
+    <!-- data statistic bolt: sender to all accepters -->
+    <bean id="accepterCountStatBolt" class="com.threecube.prod.analzyer.bolt.AccepterCountStatBolt">
+    	<property name="eplContext" value="${epl.context.accepter.count}"></property>
+    	<property name="epl" value="${epl.accepter.count}"></property>
+    	<property name="groupFields">
+    		<array>
+    			<value>${tuple.group.field.from}</value>
+    		</array>
+    	</property>
+    </bean>
+    
+    <!-- data statistic bolt: sender to all accepters -->
+    <bean id="urlInMsgStatBolt" class="com.threecube.prod.analzyer.bolt.UrlInMsgStatBolt">
+    	<property name="eplContext" value="${epl.context.url.count}"></property>
+    	<property name="epl" value="${epl.url.count}"></property>
+    	<property name="groupFields">
+    		<array>
+    			<value>${tuple.group.field.from}</value>
+    		</array>
+    	</property>
+    </bean>
+    
+    <!-- data statistic bolt: sender to all accepters -->
+    <bean id="keywordMsgStatBolt" class="com.threecube.prod.analzyer.bolt.KeywordMsgStatBolt">
+    	<property name="eplContext" value="${epl.context.keyword.count}"></property>
+    	<property name="epl" value="${epl.keyword.count}"></property>
+    	<property name="messageAnormalDetector" ref="messageAnormalDetector"></property>
+    	<property name="groupFields">
+    		<array>
+    			<value>${tuple.group.field.from}</value>
+    		</array>
+    	</property>
+    </bean>
+    
+</beans>

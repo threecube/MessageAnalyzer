@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <context:component-scan base-package="com.threecube.prod.analzyer"/>
+    <context:annotation-config/>
+        
+    <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:/config/config.properties</value>
+				<value>classpath*:/config/kafka.properties</value>
+				<value>classpath*:/config/redis.properties</value>
+				<value>classpath*:/config/mysql.properties</value>
+				<value>classpath*:/config/topology.properties</value>
+				<value>classpath*:/config/epl.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="messageAnormalDetector" class="com.threecube.prod.analzyer.service.MessageAnormalDetector">
+		<constructor-arg name="gwRuleDao" ref="gwRuleDao"/>
+	</bean>
+    
+    <bean id="topologyConfigures" class="com.threecube.prod.analzyer.topology.TopologyConfigures">
+    	<property name="topologyName" value="${topology.name}"></property>
+    	<property name="workerNum" value="${topology.worker.number}"></property>
+    	<property name="ackerNum" value="${topology.acker.number}"></property>
+    	<property name="maxSpoutPending" value="${topology.max.pending.spout}"></property>
+    </bean>
+</beans>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <!-- spout detail model bean -->
+    <bean id="kafkaMsgSpoutDetail" class="com.threecube.prod.analzyer.model.SpoutDetailModel">
+    	<property name="id" value="kafka-msg-spout"/>
+    	<property name="parallNum" value="${kafka.im.msg.partition.num}"/>
+    	<property name="component" ref="kafkaSpout"/>
+    </bean>
+    
+    <!-- bolt detail model bean for bolt sender2AcceptorStatBolt -->
+    <bean id="sender2AccepterMsgStatBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="sender-accepter-msg-stat-bolt"/>
+    	<property name="parallNum" value="${topology.count.stat.bolt.parallelism}"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="kafka-msg-spout" value=""/>
+    		</map>
+    	</property>
+    	<property name="component" ref="sender2AccepterMsgStatBolt"/>
+    </bean>
+    
+    <!-- bolt detail model bean for bolt sender2AcceptorStatBolt -->
+    <bean id="senderMsgStatBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="sender-msg-stat-bolt"/>
+    	<property name="parallNum" value="${topology.count.stat.bolt.parallelism}"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="kafka-msg-spout" value=""/>
+    		</map>
+    	</property>
+    	<property name="component" ref="senderMsgStatBolt"/>
+    </bean>
+	
+	<!-- bolt detail model bean for bolt grossMsgStatBolt -->
+    <bean id="grossMsgStatBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="gross-msg-stat-bolt"/>
+    	<property name="parallNum" value="1"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="kafka-msg-spout" value=""/>
+    		</map>
+    	</property>
+    	<property name="component" ref="grossMsgStatBolt"/>
+    </bean>
+    
+    <!-- bolt detail model bean for bolt accepterCountStatBolt -->
+    <bean id="accepterCountStatBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="accepter-count-stat-bolt"/>
+    	<property name="parallNum" value="${topology.count.stat.bolt.parallelism}"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="kafka-msg-spout" value=""/>
+    		</map>
+    	</property>
+    	<property name="component" ref="accepterCountStatBolt"/>
+    </bean>
+    
+    <!-- bolt detail model bean for bolt sender2AcceptorStatBolt -->
+    <bean id="urlInMsgStatBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="url-msg-stat-bolt"/>
+    	<property name="parallNum" value="${topology.content.stat.bolt.parallelism}"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="kafka-msg-spout" value=""/>
+    		</map>
+    	</property>
+    	<property name="component" ref="urlInMsgStatBolt"/>
+    </bean>
+    
+    <!-- bolt detail model bean for bolt sender2AcceptorStatBolt -->
+    <bean id="keywordMsgStatBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="keyword-msg-stat-bolt"/>
+    	<property name="parallNum" value="${topology.content.stat.bolt.parallelism}"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="kafka-msg-spout" value=""/>
+    		</map>
+    	</property>
+    	<property name="component" ref="keywordMsgStatBolt"/>
+    </bean>
+    
+	<!-- bolt detail model bean for bolt sender2AcceptorStatBolt -->
+    <bean id="anomalFlowDetectBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="anomal-flow-detect-bolt"/>
+    	<property name="parallNum" value="${topology.detect.bolt.parallelism}"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="sender-msg-stat-bolt" value=""/>
+    			<entry key="sender-accepter-msg-stat-bolt" value=""/>
+    			<entry key="gross-msg-stat-bolt" value=""/>
+    			<entry key="accepter-count-stat-bolt" value=""/>
+    		</map>
+    	</property>
+    	<property name="component" ref="anomalFlowDetectBolt"/>
+    </bean>
+    
+    <!-- bolt detail model bean for bolt sender2AcceptorStatBolt -->
+    <bean id="anomalContentDetectBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="anomal-content-detect-bolt"/>
+    	<property name="parallNum" value="${topology.detect.bolt.parallelism}"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="url-msg-stat-bolt" value=""/>
+    			<entry key="keyword-msg-stat-bolt" value=""/>
+    		</map>
+    	</property>
+    	<property name="component" ref="anomalContentDetectBolt"/>
+    </bean>
+    
+    <bean id="redisCommonBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="redis-common-bolt"/>
+    	<property name="parallNum" value="${topology.redis.bolt.parallelism}"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="anomal-flow-detect-bolt" value="redis-common-stream"/>
+    			<entry key="anomal-content-detect-bolt" value="redis-common-stream"/>
+    		</map>
+    	</property>
+    	<property name="component" ref="redisCommonBolt"/>
+    </bean>
+    
+    <!-- jdbc bolt detail -->
+    <bean id="jdbcCommonBoltDetail" class="com.threecube.prod.analzyer.model.BoltDetailModel">
+    	<property name="id" value="jdbc-common-bolt"/>
+    	<property name="parallNum" value="${topology.jdbc.bolt.parallelism}"/>
+    	<property name="upstreamIdMap">
+    		<map>
+    			<entry key="anomal-flow-detect-bolt" value="jdbc-common-stream"/>
+    			<entry key="anomal-content-detect-bolt" value="jdbc-common-stream"/>
+    		</map>
+    	</property>
+    	<property name="component" ref="jdbcCommonBolt"/>
+    </bean>
+    
+    <!-- define topology -->
+	<bean id="firewallTopologyBuilder" class="com.threecube.prod.analzyer.topology.FirewallTopologyBuilder">
+		<property name="topologyName" value="${topology.name}"/>
+		<property name="spoutDetailModels">
+			<list>
+				<ref bean="kafkaMsgSpoutDetail"/>
+			</list>
+		</property>
+		<property name="boltDetailModels">
+			<list>
+				<ref bean="sender2AccepterMsgStatBoltDetail"/>
+				<ref bean="senderMsgStatBoltDetail"/>
+				<ref bean="grossMsgStatBoltDetail"/>
+				<ref bean="accepterCountStatBoltDetail"/>
+				<ref bean="urlInMsgStatBoltDetail" />
+				<ref bean="keywordMsgStatBoltDetail" />
+				
+				<ref bean="anomalFlowDetectBoltDetail"/>
+				<ref bean="anomalContentDetectBoltDetail" />
+				
+				<ref bean="redisCommonBoltDetail"/>
+				<ref bean="jdbcCommonBoltDetail"/>
+			</list>
+		</property>
+	</bean>
+</beans>

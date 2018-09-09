@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.threecube.prod.analzyer.datasource.Dao.GwRuleDao">
+	<resultMap id="DataResultMap" type="com.threecube.prod.analzyer.datasource.Do.GwRuleDO">
+		<id column="rule_id" jdbcType="INTEGER" property="ruleId" />
+		<result column="window_size" jdbcType="INTEGER" property="windowSize" />
+		<result column="threshold" jdbcType="INTEGER" property="threshold" />
+		<result column="rule_type" jdbcType="CHAR" property="ruleType" />
+		<result column="rule_user" jdbcType="CHAR" property="ruleUser" />
+		<result column="rule_level" jdbcType="INTEGER" property="ruleLevel" />
+		<result column="operation_code" jdbcType="CHAR" property="operationCode" />
+		<result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+		<result column="is_valid" jdbcType="BIT" property="isValid" />
+		<result column="is_manually" jdbcType="BIT" property="isManually" />
+		<result column="property" jdbcType="VARCHAR" property="property" />
+	</resultMap>
+
+	<select id="selectByRuleid" resultMap="DataResultMap" parameterType="java.lang.Integer" >
+    	select rule_id, window_size, threshold, rule_type, rule_user, rule_level, operation_code, is_valid, is_manually, property
+    	from gw_rule
+   		where rule_id = #{ruleId,jdbcType=INTEGER}
+  	</select>
+	
+	<select id="selectValid" resultMap="DataResultMap" >
+    	select rule_id, window_size, threshold, rule_type, rule_user, rule_level, operation_code, is_valid, is_manually, property
+    	from gw_rule
+   		where is_valid = 1
+   		order by rule_type desc, rule_level desc
+  	</select>
+  	
+  	<select id="selectByRuleType" resultMap="DataResultMap" >
+    	select rule_id, window_size, threshold, rule_type, rule_user, rule_level, operation_code, is_valid, is_manually, property
+    	from gw_rule
+   		where is_valid = 1 and rule_type = #{ruleTypeCode}
+  	</select>
+  	
+</mapper>
